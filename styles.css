@@ -1,9 +1,87 @@
-/* ==========================================
-   BEBIDAS AL PASO - ESTILOS CSS
-   Landing Page Moderna y Vendedora
-   ========================================== */
+/* Estado abierto (verde) */
+.status-badge.abierto {
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: white;
+    padding: 12px 24px;
+    border-radius: 25px;
+    font-weight: bold;
+    font-size: 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+    animation: fadeIn 0.5s ease-in;
+}
 
-/* RESET Y CONFIGURACIÓN GENERAL */
+/* Estado cerrado (rojo) */
+.status-badge.cerrado {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: white;
+    padding: 12px 24px;
+    border-radius: 25px;
+    font-weight: bold;
+    font-size: 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);
+    animation: fadeIn 0.5s ease-in;
+}
+
+/* Animación de pulso para estado abierto */
+.pulse {
+    width: 10px;
+    height: 10px;
+    background-color: #fff;
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+}
+
+/* Animación de pulso para estado cerrado */
+.pulse-closed {
+    width: 10px;
+    height: 10px;
+    background-color: #fff;
+    border-radius: 50%;
+    animation: pulseRed 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(255, 255, 255, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+    }
+}
+
+@keyframes pulseRed {
+    0% {
+        box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(255, 255, 255, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Estilos básicos del resto de la página */
 * {
     margin: 0;
     padding: 0;
@@ -14,473 +92,374 @@ body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     line-height: 1.6;
     color: #333;
-    background-color: #f8f9fa;
 }
 
-/* ==========================================
-   HERO SECTION
-   ========================================== */
 .hero {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
-    padding: 80px 20px;
+    padding: 60px 20px;
     text-align: center;
-    position: relative;
-    overflow: hidden;
-}
-
-.hero::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="rgba(255,255,255,0.1)" d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,122.7C672,117,768,139,864,138.7C960,139,1056,117,1152,101.3C1248,85,1344,75,1392,69.3L1440,64L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>') no-repeat bottom;
-    background-size: cover;
-    opacity: 0.3;
 }
 
 .hero-content {
-    position: relative;
-    z-index: 1;
     max-width: 1200px;
     margin: 0 auto;
 }
 
 .hero-title {
-    font-size: 4rem;
-    font-weight: 900;
-    margin-bottom: 20px;
-    text-shadow: 3px 3px 6px rgba(0,0,0,0.3);
-    letter-spacing: 2px;
+    font-size: 3rem;
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
 }
 
 .hero-subtitle {
-    font-size: 1.8rem;
-    margin-bottom: 40px;
-    font-weight: 300;
-    opacity: 0.95;
+    font-size: 1.3rem;
+    margin-bottom: 30px;
+    opacity: 0.9;
 }
 
 .hero-info {
     display: flex;
     justify-content: center;
+    align-items: center;
     gap: 30px;
     flex-wrap: wrap;
-    margin-top: 40px;
+    margin-top: 30px;
 }
 
 .info-card {
-    background: rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(10px);
-    padding: 25px 35px;
+    padding: 20px;
     border-radius: 15px;
-    border: 2px solid rgba(255, 255, 255, 0.3);
     min-width: 250px;
-    transition: all 0.3s ease;
 }
 
-.info-card:hover {
-    background: rgba(255, 255, 255, 0.25);
-    transform: translateY(-5px);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-}
-
-.info-card .icon {
-    font-size: 2.5rem;
+.icon {
+    font-size: 2rem;
     display: block;
     margin-bottom: 10px;
 }
 
-.info-card p {
-    font-size: 1.1rem;
-    line-height: 1.5;
-}
-
-.status-badge {
-    background: #10b981;
-    color: white;
-    padding: 15px 30px;
-    border-radius: 50px;
-    font-weight: 700;
-    font-size: 1.2rem;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    box-shadow: 0 5px 20px rgba(16, 185, 129, 0.4);
-    animation: pulse-badge 2s infinite;
-}
-
-.pulse {
-    width: 12px;
-    height: 12px;
-    background: white;
-    border-radius: 50%;
-    animation: pulse-dot 2s infinite;
-}
-
-@keyframes pulse-dot {
-    0%, 100% {
-        opacity: 1;
-        transform: scale(1);
-    }
-    50% {
-        opacity: 0.5;
-        transform: scale(1.2);
-    }
-}
-
-@keyframes pulse-badge {
-    0%, 100% {
-        box-shadow: 0 5px 20px rgba(16, 185, 129, 0.4);
-    }
-    50% {
-        box-shadow: 0 5px 30px rgba(16, 185, 129, 0.6);
-    }
-}
-
-/* ==========================================
-   SECCIÓN DE PRODUCTOS
-   ========================================== */
 .products-section {
-    padding: 80px 20px;
-    background-color: #ffffff;
+    padding: 60px 20px;
+    background: #f8f9fa;
 }
 
 .container {
-    max-width: 1400px;
+    max-width: 1200px;
     margin: 0 auto;
 }
 
 .section-title {
-    font-size: 3rem;
-    font-weight: 800;
+    font-size: 2.5rem;
     text-align: center;
-    margin-bottom: 15px;
-    color: #1f2937;
+    margin-bottom: 10px;
+    color: #667eea;
 }
 
 .section-subtitle {
-    font-size: 1.3rem;
     text-align: center;
-    margin-bottom: 60px;
-    color: #6b7280;
+    font-size: 1.2rem;
+    color: #666;
+    margin-bottom: 50px;
 }
 
 .products-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 30px;
-    margin-top: 40px;
 }
 
 .product-card {
     background: white;
-    border-radius: 20px;
+    border-radius: 15px;
     overflow: hidden;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    cursor: pointer;
-    border: 2px solid transparent;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
     position: relative;
 }
 
 .product-card:hover {
-    transform: translateY(-12px) scale(1.02);
-    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
-    border-color: #667eea;
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+.badge {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: bold;
+    z-index: 1;
+    color: white;
+}
+
+.badge-popular {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+}
+
+.badge-fresh {
+    background: linear-gradient(135deg, #10b981, #059669);
+}
+
+.badge-hot {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+}
+
+.badge-cold {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
 }
 
 .product-image {
     width: 100%;
-    height: 250px;
+    height: 200px;
     overflow: hidden;
-    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    background: #f0f0f0;
 }
 
 .product-image img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 0.4s ease;
-}
-
-.product-card:hover .product-image img {
-    transform: scale(1.15);
 }
 
 .product-info {
-    padding: 25px;
-    text-align: center;
-    background: linear-gradient(to bottom, #ffffff 0%, #f9fafb 100%);
+    padding: 20px;
 }
 
 .product-info h3 {
-    font-size: 1.4rem;
-    font-weight: 700;
-    color: #1f2937;
-    margin: 0;
+    font-size: 1.3rem;
+    margin-bottom: 8px;
+    color: #333;
 }
 
-/* ==========================================
-   BADGES Y ETIQUETAS PRODUCTOS
-   ========================================== */
-.badge {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    padding: 8px 16px;
-    border-radius: 25px;
-    font-size: 0.85rem;
-    font-weight: 700;
-    z-index: 10;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-    animation: badge-float 3s ease-in-out infinite;
-}
-
-@keyframes badge-float {
-    0%, 100% {
-        transform: translateY(0);
-    }
-    50% {
-        transform: translateY(-5px);
-    }
-}
-
-.badge-popular {
-    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
-    color: white;
-}
-
-.badge-fresh {
-    background: linear-gradient(135deg, #51cf66 0%, #37b24d 100%);
-    color: white;
-}
-
-.badge-cold {
-    background: linear-gradient(135deg, #339af0 0%, #1c7ed6 100%);
-    color: white;
-}
-
-.badge-hot {
-    background: linear-gradient(135deg, #ff922b 0%, #fd7e14 100%);
-    color: white;
-}
-
-/* Descripción del producto */
 .product-desc {
-    font-size: 1rem;
-    color: #6b7280;
-    margin-top: 8px;
-    font-weight: 400;
-    line-height: 1.4;
+    color: #666;
+    font-size: 0.95rem;
 }
 
-/* ==========================================
-   SECCIÓN CTA (LLAMADA A LA ACCIÓN)
-   ========================================== */
-.cta-section {
-    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-    color: white;
-    padding: 100px 20px;
+/* Sección de Mapa */
+.map-section {
+    padding: 80px 20px;
+    background: linear-gradient(to bottom, #f8f9fa 0%, #ffffff 100%);
+}
+
+.map-container {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 40px;
+    margin-top: 40px;
+    align-items: start;
+}
+
+.map-wrapper {
+    position: relative;
+    overflow: hidden;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(102, 126, 234, 0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.map-wrapper:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 50px rgba(102, 126, 234, 0.3);
+}
+
+.map-info {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.map-info-card {
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    padding: 30px 28px;
+    border-radius: 20px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.map-info-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 35px rgba(102, 126, 234, 0.2);
+    border-color: rgba(102, 126, 234, 0.3);
+    background: linear-gradient(135deg, #ffffff 0%, #faf5ff 100%);
+}
+
+.map-icon {
+    font-size: 2.8rem;
+    min-width: 70px;
     text-align: center;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 18px;
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+}
+
+.map-info-card > div {
+    flex: 1;
+}
+
+.map-info-card h3 {
+    font-size: 1.4rem;
+    margin-bottom: 10px;
+    color: #667eea;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
+
+.map-info-card p {
+    color: #555;
+    font-size: 1.05rem;
+    line-height: 1.7;
+    font-weight: 500;
+}
+
+.map-button {
+    display: inline-block;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 20px 40px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 1.15rem;
+    text-align: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+    margin-top: 15px;
+    width: 100%;
     position: relative;
     overflow: hidden;
 }
 
-.cta-section::before {
+.map-button::before {
     content: '';
     position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: repeating-linear-gradient(
-        45deg,
-        transparent,
-        transparent 10px,
-        rgba(255,255,255,0.05) 10px,
-        rgba(255,255,255,0.05) 20px
-    );
-    animation: slide 20s linear infinite;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.5s ease;
 }
 
-@keyframes slide {
-    0% {
-        transform: translate(0, 0);
-    }
-    100% {
-        transform: translate(50px, 50px);
-    }
+.map-button:hover::before {
+    left: 100%;
 }
 
-.cta-content {
-    position: relative;
-    z-index: 1;
-    max-width: 900px;
-    margin: 0 auto;
+.map-button:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 12px 35px rgba(102, 126, 234, 0.5);
 }
 
-.cta-title {
-    font-size: 3.5rem;
-    font-weight: 900;
-    margin-bottom: 20px;
-    text-shadow: 2px 2px 8px rgba(0,0,0,0.2);
+.map-button:active {
+    transform: translateY(-1px) scale(1);
 }
 
-.cta-subtitle {
-    font-size: 2rem;
-    margin-bottom: 40px;
-    font-weight: 300;
-}
-
-.cta-details {
-    background: rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(10px);
-    padding: 30px;
-    border-radius: 20px;
-    display: inline-block;
-    border: 2px solid rgba(255, 255, 255, 0.3);
-}
-
-.cta-address,
-.cta-hours {
-    font-size: 1.4rem;
-    margin: 10px 0;
-    font-weight: 500;
-}
-
-/* ==========================================
-   FOOTER
-   ========================================== */
-.footer {
-    background: #1f2937;
+.cta-section {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
-    padding: 50px 20px;
+    padding: 60px 20px;
     text-align: center;
 }
 
-.footer-content {
-    max-width: 800px;
-    margin: 0 auto;
+.cta-title {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+}
+
+.cta-subtitle {
+    font-size: 1.3rem;
+    margin-bottom: 30px;
+    opacity: 0.9;
+}
+
+.cta-details {
+    font-size: 1.1rem;
+}
+
+.cta-address, .cta-hours {
+    margin: 10px 0;
+}
+
+.footer {
+    background: #1f2937;
+    color: white;
+    padding: 40px 20px;
+    text-align: center;
 }
 
 .footer-title {
-    font-size: 2rem;
-    font-weight: 700;
-    margin-bottom: 20px;
+    font-size: 1.8rem;
+    margin-bottom: 15px;
 }
 
 .footer-text {
-    font-size: 1.2rem;
-    margin: 10px 0;
+    margin: 8px 0;
     opacity: 0.9;
 }
 
 .footer-copy {
-    margin-top: 30px;
+    margin-top: 20px;
     padding-top: 20px;
-    border-top: 1px solid rgba(255,255,255,0.2);
+    border-top: 1px solid rgba(255,255,255,0.1);
     opacity: 0.7;
-    font-size: 0.95rem;
+    font-size: 0.9rem;
 }
 
-/* ==========================================
-   RESPONSIVE DESIGN - MOBILE
-   ========================================== */
+/* Responsive */
 @media (max-width: 768px) {
     .hero-title {
-        font-size: 2.5rem;
+        font-size: 2rem;
     }
-
-    .hero-subtitle {
-        font-size: 1.3rem;
-    }
-
-    .hero-info {
-        flex-direction: column;
-        gap: 20px;
-    }
-
-    .info-card {
-        min-width: auto;
-        width: 100%;
-    }
-
+    
     .section-title {
         font-size: 2rem;
     }
-
-    .section-subtitle {
-        font-size: 1.1rem;
-    }
-
+    
     .products-grid {
         grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
         gap: 20px;
     }
-
-    .product-image {
-        height: 200px;
+    
+    .hero-info {
+        flex-direction: column;
+        gap: 15px;
     }
-
-    .cta-title {
-        font-size: 2.2rem;
-    }
-
-    .cta-subtitle {
-        font-size: 1.5rem;
-    }
-
-    .cta-address,
-    .cta-hours {
-        font-size: 1.2rem;
-    }
-
-    .badge {
-        font-size: 0.75rem;
-        padding: 6px 12px;
-    }
-}
-
-@media (max-width: 480px) {
-    .hero {
-        padding: 60px 15px;
-    }
-
-    .hero-title {
-        font-size: 2rem;
-    }
-
-    .hero-subtitle {
-        font-size: 1.1rem;
-    }
-
-    .products-grid {
+    
+    /* Mapa responsive */
+    .map-container {
         grid-template-columns: 1fr;
+        gap: 30px;
     }
-
-    .cta-section {
-        padding: 60px 15px;
+    
+    .map-wrapper iframe {
+        height: 350px;
     }
-
-    .cta-title {
-        font-size: 1.8rem;
+    
+    .map-info-card {
+        padding: 20px;
     }
-
-    .cta-subtitle {
-        font-size: 1.2rem;
+    
+    .map-icon {
+        font-size: 2rem;
+        min-width: 50px;
     }
-
-    .badge {
-        top: 10px;
-        right: 10px;
-        font-size: 0.7rem;
-        padding: 5px 10px;
-    }
-
-    .product-desc {
-        font-size: 0.9rem;
+    
+    .map-button {
+        width: 100%;
+        padding: 15px 25px;
+        font-size: 1rem;
     }
 }
