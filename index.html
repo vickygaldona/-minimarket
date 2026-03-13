@@ -3,302 +3,989 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bebidas al Paso - Minimarket</title>
-    <link rel="stylesheet" href="styles.css">
-    <script src="script.js" defer></script>
+    <title>Bebidas al Paso — Minimarket Familiar</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --cream:    #F7F2EA;
+            --warm:     #EDE4D3;
+            --bark:     #2C2018;
+            --espresso: #3D2B1F;
+            --amber:    #C8822A;
+            --amber-lt: #E8A84A;
+            --sage:     #7A8C6E;
+            --stone:    #8A7D6B;
+            --white:    #FDFAF5;
+            --gap: clamp(1rem, 3vw, 2rem);
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--cream);
+            color: var(--bark);
+            overflow-x: hidden;
+        }
+
+        /* ─── NOISE TEXTURE OVERLAY ─── */
+        body::before {
+            content: '';
+            position: fixed; inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.035'/%3E%3C/svg%3E");
+            pointer-events: none; z-index: 999; opacity: 0.4;
+        }
+
+        /* ─── NAV ─── */
+        nav {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 1.2rem clamp(1.5rem, 5vw, 4rem);
+            background: rgba(247, 242, 234, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(44, 32, 24, 0.08);
+            transition: box-shadow 0.3s;
+        }
+        nav.scrolled { box-shadow: 0 4px 24px rgba(44,32,24,0.08); }
+
+        .nav-logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.4rem; font-weight: 500; letter-spacing: 0.02em;
+            color: var(--bark); text-decoration: none;
+        }
+        .nav-logo span { color: var(--amber); }
+
+        .nav-links {
+            display: flex; gap: 2rem; list-style: none;
+        }
+        .nav-links a {
+            font-size: 0.78rem; font-weight: 400; letter-spacing: 0.1em;
+            text-transform: uppercase; color: var(--stone);
+            text-decoration: none; transition: color 0.2s;
+        }
+        .nav-links a:hover { color: var(--amber); }
+
+        .nav-status {
+            display: flex; align-items: center; gap: 0.5rem;
+            font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase;
+            color: var(--sage); font-weight: 500;
+        }
+        .nav-dot {
+            width: 7px; height: 7px; border-radius: 50%;
+            background: var(--sage);
+            box-shadow: 0 0 0 0 rgba(122,140,110,0.5);
+            animation: pulse-dot 2s infinite;
+        }
+        @keyframes pulse-dot {
+            0%   { box-shadow: 0 0 0 0 rgba(122,140,110,0.5); }
+            70%  { box-shadow: 0 0 0 6px rgba(122,140,110,0); }
+            100% { box-shadow: 0 0 0 0 rgba(122,140,110,0); }
+        }
+
+        /* ─── HERO ─── */
+        .hero {
+            min-height: 100vh;
+            display: grid; place-items: center;
+            padding: 7rem clamp(1.5rem, 5vw, 4rem) 4rem;
+            position: relative; overflow: hidden;
+            background: var(--white);
+        }
+
+        /* Decorative arcs */
+        .hero::before {
+            content: '';
+            position: absolute; bottom: -40%; right: -20%;
+            width: 70vw; height: 70vw;
+            border-radius: 50%;
+            border: 1px solid rgba(200,130,42,0.12);
+            pointer-events: none;
+        }
+        .hero::after {
+            content: '';
+            position: absolute; bottom: -55%; right: -30%;
+            width: 90vw; height: 90vw;
+            border-radius: 50%;
+            border: 1px solid rgba(200,130,42,0.07);
+            pointer-events: none;
+        }
+
+        .hero-inner {
+            max-width: 1100px; width: 100%;
+            display: grid; grid-template-columns: 1fr 1fr;
+            gap: 4rem; align-items: center;
+            position: relative; z-index: 1;
+        }
+
+        .hero-eyebrow {
+            display: inline-flex; align-items: center; gap: 0.6rem;
+            font-size: 0.72rem; letter-spacing: 0.15em; text-transform: uppercase;
+            color: var(--amber); font-weight: 500; margin-bottom: 1.5rem;
+        }
+        .hero-eyebrow::before {
+            content: ''; display: block;
+            width: 28px; height: 1px; background: var(--amber);
+        }
+
+        .hero-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(3.5rem, 7vw, 5.5rem);
+            font-weight: 300; line-height: 1.05;
+            color: var(--bark); letter-spacing: -0.01em;
+        }
+        .hero-title em {
+            font-style: italic; color: var(--amber);
+        }
+
+        .hero-divider {
+            width: 48px; height: 2px;
+            background: linear-gradient(90deg, var(--amber), transparent);
+            margin: 1.8rem 0;
+        }
+
+        .hero-desc {
+            font-size: 1rem; line-height: 1.75;
+            color: var(--stone); max-width: 400px; font-weight: 300;
+        }
+
+        .hero-cards {
+            display: grid; grid-template-columns: 1fr 1fr;
+            gap: 1rem; margin-top: 2.5rem;
+        }
+        .hero-card {
+            background: var(--cream);
+            border: 1px solid rgba(44,32,24,0.08);
+            border-radius: 16px; padding: 1.2rem;
+        }
+        .hero-card-icon { font-size: 1.4rem; margin-bottom: 0.5rem; }
+        .hero-card h4 {
+            font-size: 0.65rem; text-transform: uppercase;
+            letter-spacing: 0.1em; color: var(--stone); margin-bottom: 0.2rem;
+        }
+        .hero-card p {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1rem; color: var(--bark); font-weight: 500;
+        }
+
+        .hero-visual {
+            position: relative;
+        }
+        .hero-visual-frame {
+            aspect-ratio: 4/5;
+            border-radius: 24px 24px 120px 24px;
+            overflow: hidden;
+            background: var(--warm);
+            border: 1px solid rgba(44,32,24,0.1);
+            position: relative;
+        }
+        .hero-visual-frame img {
+            width: 100%; height: 100%; object-fit: cover;
+            transition: transform 0.8s ease;
+        }
+        .hero-visual-frame:hover img { transform: scale(1.04); }
+
+        /* Floating badge */
+        .hero-badge {
+            position: absolute; bottom: -1.5rem; left: -2rem;
+            background: var(--espresso);
+            color: var(--amber-lt);
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.9rem; font-style: italic;
+            padding: 1rem 1.4rem;
+            border-radius: 14px;
+            box-shadow: 0 12px 40px rgba(44,32,24,0.25);
+            white-space: nowrap;
+        }
+        .hero-badge strong {
+            display: block; font-style: normal;
+            font-size: 1.5rem; font-weight: 600; line-height: 1;
+            color: var(--white);
+        }
+
+        /* ─── SECTION COMMONS ─── */
+        section { padding: clamp(4rem, 8vw, 7rem) clamp(1.5rem, 5vw, 4rem); }
+        .container { max-width: 1100px; margin: 0 auto; }
+
+        .section-label {
+            display: inline-flex; align-items: center; gap: 0.6rem;
+            font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase;
+            color: var(--amber); font-weight: 500; margin-bottom: 0.8rem;
+        }
+        .section-label::before {
+            content: ''; display: block;
+            width: 20px; height: 1px; background: var(--amber);
+        }
+
+        .section-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(2.2rem, 4vw, 3.4rem);
+            font-weight: 400; line-height: 1.1;
+            color: var(--bark); margin-bottom: 1rem;
+        }
+        .section-subtitle {
+            font-size: 0.95rem; color: var(--stone);
+            font-weight: 300; line-height: 1.7;
+            max-width: 480px;
+        }
+
+        /* ─── STRIP / MARQUEE ─── */
+        .strip {
+            background: var(--espresso);
+            padding: 1rem 0; overflow: hidden;
+        }
+        .strip-track {
+            display: flex; gap: 3rem;
+            animation: marquee 22s linear infinite;
+            white-space: nowrap;
+        }
+        .strip-item {
+            display: flex; align-items: center; gap: 0.6rem;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.05rem; font-style: italic;
+            color: rgba(232,168,74,0.7); flex-shrink: 0;
+        }
+        .strip-item span { color: var(--amber-lt); font-size: 0.75rem; }
+        @keyframes marquee {
+            0%   { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* ─── PRODUCTS ─── */
+        .products-section { background: var(--cream); }
+
+        .products-header {
+            display: flex; align-items: flex-end; justify-content: space-between;
+            margin-bottom: 3.5rem; flex-wrap: wrap; gap: 1.5rem;
+        }
+
+        /* Filter tabs */
+        .filter-tabs {
+            display: flex; gap: 0.5rem; flex-wrap: wrap;
+        }
+        .filter-btn {
+            padding: 0.45rem 1rem;
+            border: 1px solid rgba(44,32,24,0.15);
+            border-radius: 100px; background: transparent;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.75rem; letter-spacing: 0.05em;
+            color: var(--stone); cursor: pointer;
+            transition: all 0.2s;
+        }
+        .filter-btn:hover, .filter-btn.active {
+            background: var(--bark); color: var(--cream);
+            border-color: var(--bark);
+        }
+
+        /* Products grid */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .product-card {
+            background: var(--white);
+            border: 1px solid rgba(44,32,24,0.07);
+            border-radius: 20px; overflow: hidden;
+            transition: transform 0.35s ease, box-shadow 0.35s ease;
+            position: relative;
+            cursor: default;
+        }
+        .product-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 50px rgba(44,32,24,0.1);
+        }
+
+        .product-img-wrap {
+            aspect-ratio: 4/3; overflow: hidden;
+            background: var(--warm);
+            position: relative;
+        }
+        .product-img-wrap img {
+            width: 100%; height: 100%; object-fit: cover;
+            transition: transform 0.6s ease;
+        }
+        .product-card:hover .product-img-wrap img { transform: scale(1.08); }
+
+        /* Emoji fallback shown when img fails */
+        .product-emoji-fallback {
+            position: absolute; inset: 0;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 3rem;
+            opacity: 0; transition: opacity 0.3s;
+        }
+        .product-img-wrap img.errored ~ .product-emoji-fallback { opacity: 1; }
+
+        .product-body { padding: 1.2rem 1.4rem 1.4rem; }
+
+        .badge {
+            position: absolute; top: 0.8rem; left: 0.8rem; z-index: 2;
+            padding: 0.28rem 0.75rem;
+            border-radius: 100px;
+            font-size: 0.65rem; font-weight: 500; letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+        .badge-popular { background: var(--amber); color: var(--white); }
+        .badge-fresh   { background: var(--sage);  color: var(--white); }
+        .badge-cold    { background: #4E7CA1;       color: var(--white); }
+        .badge-hot     { background: #B84A2A;       color: var(--white); }
+
+        .product-name {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.25rem; font-weight: 500;
+            color: var(--bark); margin-bottom: 0.3rem;
+        }
+        .product-desc {
+            font-size: 0.82rem; color: var(--stone); font-weight: 300; line-height: 1.5;
+        }
+
+        /* ─── GALLERY ─── */
+        .gallery-section { background: var(--white); }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            grid-template-rows: auto auto;
+            gap: 1rem; margin-top: 3rem;
+        }
+        .gallery-item {
+            border-radius: 18px; overflow: hidden;
+            background: var(--warm); position: relative;
+        }
+        .gallery-item:first-child {
+            grid-row: 1 / 3;
+            aspect-ratio: 3/4;
+        }
+        .gallery-item:not(:first-child) { aspect-ratio: 4/3; }
+
+        .gallery-item img {
+            width: 100%; height: 100%; object-fit: cover;
+            transition: transform 0.6s ease;
+        }
+        .gallery-item:hover img { transform: scale(1.05); }
+
+        .gallery-overlay {
+            position: absolute; inset: 0;
+            background: linear-gradient(to top, rgba(44,32,24,0.5), transparent 60%);
+            opacity: 0; transition: opacity 0.35s;
+            display: flex; align-items: flex-end; padding: 1.2rem;
+        }
+        .gallery-item:hover .gallery-overlay { opacity: 1; }
+        .gallery-overlay span {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic; font-size: 1.05rem;
+            color: var(--cream); line-height: 1.2;
+        }
+
+        /* Gallery emoji placeholders */
+        .gallery-placeholder {
+            width: 100%; height: 100%; min-height: 200px;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center; gap: 0.5rem;
+            color: var(--stone); font-size: 2.5rem;
+        }
+        .gallery-placeholder p {
+            font-size: 0.8rem; font-family: 'Cormorant Garamond', serif;
+            font-style: italic; color: var(--stone);
+        }
+
+        /* ─── MAP SECTION ─── */
+        .map-section { background: var(--espresso); color: var(--cream); }
+        .map-section .section-title { color: var(--white); }
+        .map-section .section-subtitle { color: rgba(247,242,234,0.6); }
+        .map-section .section-label { color: var(--amber-lt); }
+        .map-section .section-label::before { background: var(--amber-lt); }
+
+        .map-layout {
+            display: grid; grid-template-columns: 1fr 340px;
+            gap: 2.5rem; margin-top: 3rem; align-items: start;
+        }
+
+        .map-frame {
+            border-radius: 20px; overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.08);
+            box-shadow: 0 24px 60px rgba(0,0,0,0.3);
+        }
+        .map-frame iframe { display: block; }
+
+        .map-sidebar { display: flex; flex-direction: column; gap: 1rem; }
+
+        .info-tile {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 16px; padding: 1.4rem;
+            display: flex; gap: 1rem; align-items: flex-start;
+        }
+        .info-tile-icon {
+            width: 40px; height: 40px; border-radius: 10px;
+            background: rgba(200,130,42,0.15);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.1rem; flex-shrink: 0;
+        }
+        .info-tile h4 {
+            font-size: 0.65rem; text-transform: uppercase;
+            letter-spacing: 0.1em; color: var(--amber-lt); margin-bottom: 0.3rem;
+        }
+        .info-tile p {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.05rem; color: var(--white); line-height: 1.4;
+        }
+
+        .map-btn {
+            display: flex; align-items: center; justify-content: center; gap: 0.6rem;
+            padding: 1rem; border-radius: 14px;
+            background: var(--amber); color: var(--white);
+            text-decoration: none; font-size: 0.8rem;
+            letter-spacing: 0.06em; text-transform: uppercase; font-weight: 500;
+            transition: background 0.2s, transform 0.2s;
+        }
+        .map-btn:hover { background: var(--amber-lt); transform: translateY(-2px); }
+
+        /* ─── CTA ─── */
+        .cta-section {
+            background: var(--cream);
+            text-align: center; padding: clamp(4rem, 8vw, 7rem) 2rem;
+        }
+
+        .cta-inner {
+            max-width: 640px; margin: 0 auto;
+        }
+
+        .cta-ornament {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 3.5rem; color: var(--amber); opacity: 0.3;
+            line-height: 1; margin-bottom: 1rem;
+        }
+
+        .cta-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(2.4rem, 5vw, 3.8rem);
+            font-weight: 300; line-height: 1.1; color: var(--bark);
+            margin-bottom: 1rem;
+        }
+        .cta-title em { font-style: italic; color: var(--amber); }
+
+        .cta-sub {
+            font-size: 0.9rem; color: var(--stone); font-weight: 300;
+            line-height: 1.7; margin-bottom: 2.5rem;
+        }
+
+        .cta-pills {
+            display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;
+        }
+        .cta-pill {
+            display: flex; align-items: center; gap: 0.5rem;
+            padding: 0.6rem 1.3rem;
+            border: 1px solid rgba(44,32,24,0.15);
+            border-radius: 100px;
+            font-size: 0.82rem; color: var(--bark); font-weight: 400;
+        }
+
+        /* ─── FOOTER ─── */
+        footer {
+            background: var(--bark); color: var(--cream);
+            padding: 3rem clamp(1.5rem, 5vw, 4rem);
+        }
+        .footer-inner {
+            max-width: 1100px; margin: 0 auto;
+            display: flex; align-items: center; justify-content: space-between;
+            flex-wrap: wrap; gap: 1.5rem;
+        }
+        .footer-logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.5rem; font-weight: 400; color: var(--white);
+        }
+        .footer-logo span { color: var(--amber); }
+
+        .footer-details {
+            display: flex; flex-direction: column; gap: 0.3rem;
+            font-size: 0.8rem; color: rgba(247,242,234,0.5);
+            text-align: right;
+        }
+        .footer-details strong { color: rgba(247,242,234,0.8); font-weight: 400; }
+
+        .footer-copy {
+            width: 100%; text-align: center;
+            font-size: 0.7rem; color: rgba(247,242,234,0.25);
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255,255,255,0.06);
+        }
+
+        /* ─── SCROLL ANIMATIONS ─── */
+        .reveal {
+            opacity: 0; transform: translateY(28px);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+        .reveal.visible {
+            opacity: 1; transform: translateY(0);
+        }
+        .reveal-delay-1 { transition-delay: 0.1s; }
+        .reveal-delay-2 { transition-delay: 0.2s; }
+        .reveal-delay-3 { transition-delay: 0.3s; }
+        .reveal-delay-4 { transition-delay: 0.4s; }
+
+        /* ─── RESPONSIVE ─── */
+        @media (max-width: 900px) {
+            .nav-links { display: none; }
+            .hero-inner { grid-template-columns: 1fr; }
+            .hero-visual { display: none; }
+            .map-layout { grid-template-columns: 1fr; }
+            .gallery-grid { grid-template-columns: 1fr 1fr; }
+            .gallery-item:first-child { grid-row: auto; grid-column: 1 / 3; }
+        }
+        @media (max-width: 520px) {
+            .gallery-grid { grid-template-columns: 1fr; }
+            .gallery-item:first-child { grid-column: 1; }
+            .hero-cards { grid-template-columns: 1fr; }
+            .footer-inner { flex-direction: column; text-align: center; }
+            .footer-details { text-align: center; }
+        }
+    </style>
 </head>
 <body>
-    <!-- HEADER / HERO SECTION -->
-    <header class="hero">
-        <div class="hero-content">
-            <h1 class="hero-title">Bebidas al Paso</h1>
-            <p class="hero-subtitle">Todo lo que buscás, al paso y cerca tuyo</p>
-            <div class="hero-info">
-                <div class="info-card">
-                    <span class="icon">📍</span>
-                    <p><strong>Dirección:</strong><br>Tirasso 2765</p>
-                </div>
-                <div class="info-card">
-                    <span class="icon">🕐</span>
-                    <p><strong>Horario:</strong><br>Todos los días de 8:00 AM a 12:00 de la noche</p>
-                </div>
-                <div class="status-badge abierto">
-                    <span class="pulse"></span>
-                    ABIERTO AHORA
+
+    <!-- NAV -->
+    <nav id="nav">
+        <a href="#" class="nav-logo">Bebidas <span>al Paso</span></a>
+        <ul class="nav-links">
+            <li><a href="#productos">Productos</a></li>
+            <li><a href="#galeria">El local</a></li>
+            <li><a href="#ubicacion">Ubicación</a></li>
+        </ul>
+        <div class="nav-status">
+            <div class="nav-dot"></div>
+            Abierto ahora
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero">
+        <div class="hero-inner">
+            <div class="hero-text">
+                <p class="hero-eyebrow">Minimarket familiar · Tirasso 2765</p>
+                <h1 class="hero-title">
+                    Bebidas<br>
+                    <em>al Paso</em>
+                </h1>
+                <div class="hero-divider"></div>
+                <p class="hero-desc">
+                    Todo lo que necesitás, cerca tuyo. Carnes frescas, bebidas heladas, 
+                    frutas y verduras, y mucho más. Abierto todos los días para tu comodidad.
+                </p>
+                <div class="hero-cards">
+                    <div class="hero-card">
+                        <div class="hero-card-icon">📍</div>
+                        <h4>Dirección</h4>
+                        <p>Tirasso 2765</p>
+                    </div>
+                    <div class="hero-card">
+                        <div class="hero-card-icon">🕐</div>
+                        <h4>Horario</h4>
+                        <p>8 AM – 12 AM</p>
+                    </div>
                 </div>
             </div>
-        </div>
-    </header>
-
-    <!-- SECCIÓN DE PRODUCTOS -->
-    <section class="products-section">
-        <div class="container">
-            <h2 class="section-title">Nuestros Productos</h2>
-            <p class="section-subtitle">Encontrá todo lo que necesitás en un solo lugar</p>
-            
-            <div class="products-grid">
-                <!-- Producto 1 -->
-                <div class="product-card">
-                    <span class="badge badge-popular">🔥 Popular</span>
-                    <div class="product-image">
-                        <img src="public/carnes-asado.jpg" alt="Carnes para asado">
-                    </div>
-                    <div class="product-info">
-                        <h3>🥩 Milanesas</h3>
-                        <p class="product-desc">Cortes frescos y de calidad</p>
-                    </div>
+            <div class="hero-visual">
+                <div class="hero-visual-frame">
+                    <img src="public/vinos.jpg" alt="Bebidas al Paso"
+                         onerror="this.style.opacity='0'">
                 </div>
-
-                <!-- Producto 2 -->
-                <div class="product-card">
-                    <span class="badge badge-fresh">✨ Fresco</span>
-                    <div class="product-image">
-                        <img src="public/pata-muslo.jpg" alt="Pata y muslo">
-                    </div>
-                    <div class="product-info">
-                        <h3>🍗 Pata y Muslo</h3>
-                        <p class="product-desc">Pollo fresco del día</p>
-                    </div>
-                </div>
-
-                <!-- Producto 3 -->
-                <div class="product-card">
-                    <span class="badge badge-hot">🌶️ Parrilla</span>
-                    <div class="product-image">
-                        <img src="public/chorizos.jpg" alt="Chorizos">
-                    </div>
-                    <div class="product-info">
-                        <h3>🌭 Chorizos</h3>
-                        <p class="product-desc">Ideales para tu asado</p>
-                    </div>
-                </div>
-
-                <!-- Producto 4 -->
-                <div class="product-card">
-                    <div class="product-image">
-                        <img src="public/fiambres.jpg" alt="Fiambres">
-                    </div>
-                    <div class="product-info">
-                        <h3>🧀 Fiambres</h3>
-                        <p class="product-desc">Variedad de quesos y embutidos</p>
-                    </div>
-                </div>
-
-                <!-- Producto 5 -->
-                <div class="product-card">
-                    <span class="badge badge-fresh">✨ Fresco</span>
-                    <div class="product-image">
-                        <img src="public/lacteos.jpg" alt="Lácteos">
-                    </div>
-                    <div class="product-info">
-                        <h3>🥛 Lácteos</h3>
-                        <p class="product-desc">Leche, yogures y más</p>
-                    </div>
-                </div>
-
-                <!-- Producto 6 -->
-                <div class="product-card">
-                    <span class="badge badge-fresh">✨ Fresco</span>
-                    <div class="product-image">
-                        <img src="public/verduras-frescas.jpg" alt="Verduras frescas">
-                    </div>
-                    <div class="product-info">
-                        <h3>🥬 Verduras Frescas</h3>
-                        <p class="product-desc">Directo de la huerta</p>
-                    </div>
-                </div>
-
-                <!-- Producto 7 -->
-                <div class="product-card">
-                    <span class="badge badge-fresh">✨ Fresco</span>
-                    <div class="product-image">
-                        <img src="public/frutas-manzanas.jpg" alt="Frutas manzanas">
-                    </div>
-                    <div class="product-info">
-                        <h3>🍎 Manzanas</h3>
-                        <p class="product-desc">Frutas de primera calidad</p>
-                    </div>
-                </div>
-
-                <!-- Producto 8 -->
-                <div class="product-card">
-                    <div class="product-image">
-                        <img src="public/citricos.naranjas.jpg" alt="Cítricos naranjas">
-                    </div>
-                    <div class="product-info">
-                        <h3>🍊 Naranjas</h3>
-                        <p class="product-desc">Cítricos jugosos y dulces</p>
-                    </div>
-                </div>
-
-                <!-- Producto 9 -->
-                <div class="product-card">
-                    <div class="product-image">
-                        <img src="public/galletas.jpg" alt="Galletas">
-                    </div>
-                    <div class="product-info">
-                        <h3>🍪 Galletas</h3>
-                        <p class="product-desc">Dulces y saladas</p>
-                    </div>
-                </div>
-
-                <!-- Producto 10 -->
-                <div class="product-card">
-                    <span class="badge badge-popular">🔥 Popular</span>
-                    <div class="product-image">
-                        <img src="public/snacks.jpg" alt="Snacks">
-                    </div>
-                    <div class="product-info">
-                        <h3>🍿 Snacks</h3>
-                        <p class="product-desc">Para picar en cualquier momento</p>
-                    </div>
-                </div>
-
-                <!-- Producto 11 -->
-                <div class="product-card">
-                    <span class="badge badge-cold">❄️ Helado</span>
-                    <div class="product-image">
-                        <img src="public/gaseosas.jpg" alt="Gaseosas frías">
-                    </div>
-                    <div class="product-info">
-                        <h3>🥤 Gaseosas Frías</h3>
-                        <p class="product-desc">Todas las marcas bien heladas</p>
-                    </div>
-                </div>
-
-                <!-- Producto 12 -->
-                <div class="product-card">
-                    <span class="badge badge-cold">❄️ Helado</span>
-                    <div class="product-image">
-                        <img src="public/cervezas.jpg" alt="Cervezas">
-                    </div>
-                    <div class="product-info">
-                        <h3>🍺 Cervezas</h3>
-                        <p class="product-desc">Bien frías, siempre listas</p>
-                    </div>
-                </div>
-
-                <!-- Producto 13 -->
-                <div class="product-card">
-                    <span class="badge badge-popular">🔥 Popular</span>
-                    <div class="product-image">
-                        <img src="public/vinos.jpg" alt="Vinos">
-                    </div>
-                    <div class="product-info">
-                        <h3>🍷 Vinos</h3>
-                        <p class="product-desc">Tintos, blancos y espumantes</p>
-                    </div>
-                </div>
-
-                <!-- Producto 14 -->
-                <div class="product-card">
-                    <div class="product-image">
-                        <img src="public/jugos.jpg" alt="Jugos">
-                    </div>
-                    <div class="product-info">
-                        <h3>🧃 Jugos</h3>
-                        <p class="product-desc">Naturales y envasados</p>
-                    </div>
-                </div>
-
-                <!-- Producto 15 -->
-                <div class="product-card">
-                    <span class="badge badge-cold">❄️ Helado</span>
-                    <div class="product-image">
-                        <img src="public/helados.jpg" alt="Helados">
-                    </div>
-                    <div class="product-info">
-                        <h3>🍦 Helados</h3>
-                        <p class="product-desc">Variedad de sabores</p>
-                    </div>
-                </div>
-
-                <!-- Producto 16 -->
-                <div class="product-card">
-                    <span class="badge badge-cold">❄️ Helado</span>
-                    <div class="product-image">
-                        <img src="public/hielo.jpg" alt="Hielo">
-                    </div>
-                    <div class="product-info">
-                        <h3>🧊 Hielo</h3>
-                        <p class="product-desc">Bolsas de hielo para eventos</p>
-                    </div>
-                </div>
-
-                <!-- Producto 17 -->
-                <div class="product-card">
-                    <div class="product-image">
-                        <img src="public/perfumeria.jpg" alt="Perfumería">
-                    </div>
-                    <div class="product-info">
-                        <h3>💄 Perfumería</h3>
-                        <p class="product-desc">Artículos de higiene y belleza</p>
-                    </div>
-                </div>
-
-                <!-- Producto 18 -->
-                <div class="product-card">
-                    <div class="product-image">
-                        <img src="public/productos-varios.jpg" alt="Productos varios">
-                    </div>
-                    <div class="product-info">
-                        <h3>🛒 Productos Varios</h3>
-                        <p class="product-desc">Todo lo que necesitás</p>
-                    </div>
-                </div>
-
-                <!-- Producto 19 -->
-                <div class="product-card">
-                    <span class="badge badge-hot">🌶️ Parrilla</span>
-                    <div class="product-image">
-                        <img src="public/lena.jpg" alt="Leña">
-                    </div>
-                    <div class="product-info">
-                        <h3>🔥 Leña</h3>
-                        <p class="product-desc">Para tu asado perfecto</p>
-                    </div>
+                <div class="hero-badge">
+                    Abierto<br>
+                    <strong>Todos los días</strong>
+                    hasta medianoche
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- SECCIÓN DE MAPA -->
-    <section class="map-section">
+    <!-- STRIP -->
+    <div class="strip" aria-hidden="true">
+        <div class="strip-track">
+            <div class="strip-item"><span>✦</span> Carnes Frescas</div>
+            <div class="strip-item"><span>✦</span> Bebidas Heladas</div>
+            <div class="strip-item"><span>✦</span> Verduras del día</div>
+            <div class="strip-item"><span>✦</span> Vinos & Cervezas</div>
+            <div class="strip-item"><span>✦</span> Fiambres & Lácteos</div>
+            <div class="strip-item"><span>✦</span> Snacks & Golosinas</div>
+            <div class="strip-item"><span>✦</span> Leña para asado</div>
+            <div class="strip-item"><span>✦</span> Hielo para eventos</div>
+            <!-- duplicado para loop infinito -->
+            <div class="strip-item"><span>✦</span> Carnes Frescas</div>
+            <div class="strip-item"><span>✦</span> Bebidas Heladas</div>
+            <div class="strip-item"><span>✦</span> Verduras del día</div>
+            <div class="strip-item"><span>✦</span> Vinos & Cervezas</div>
+            <div class="strip-item"><span>✦</span> Fiambres & Lácteos</div>
+            <div class="strip-item"><span>✦</span> Snacks & Golosinas</div>
+            <div class="strip-item"><span>✦</span> Leña para asado</div>
+            <div class="strip-item"><span>✦</span> Hielo para eventos</div>
+        </div>
+    </div>
+
+    <!-- PRODUCTS -->
+    <section class="products-section" id="productos">
         <div class="container">
-            <h2 class="section-title">¿Cómo llegar?</h2>
-            <p class="section-subtitle">Encontranos fácilmente en Tirasso 2765</p>
-            
-            <div class="map-container">
-                <div class="map-wrapper">
-                    <iframe 
+            <div class="products-header">
+                <div>
+                    <p class="section-label reveal">Lo que encontrás</p>
+                    <h2 class="section-title reveal reveal-delay-1">Nuestros productos</h2>
+                    <p class="section-subtitle reveal reveal-delay-2">
+                        Seleccionados con cuidado para traerte calidad y frescura cada día.
+                    </p>
+                </div>
+                <div class="filter-tabs reveal reveal-delay-2">
+                    <button class="filter-btn active" data-filter="all">Todos</button>
+                    <button class="filter-btn" data-filter="carnes">Carnes</button>
+                    <button class="filter-btn" data-filter="bebidas">Bebidas</button>
+                    <button class="filter-btn" data-filter="frescos">Frescos</button>
+                    <button class="filter-btn" data-filter="almacen">Almacén</button>
+                </div>
+            </div>
+
+            <div class="products-grid" id="productsGrid">
+
+                <div class="product-card reveal" data-cat="carnes">
+                    <span class="badge badge-popular">Popular</span>
+                    <div class="product-img-wrap">
+                        <img src="public/carnes-asado.jpg" alt="Milanesas"
+                             onerror="this.classList.add('errored')">
+                        <div class="product-emoji-fallback">🥩</div>
+                    </div>
+                    <div class="product-body">
+                        <h3 class="product-name">Milanesas</h3>
+                        <p class="product-desc">Cortes frescos y de calidad</p>
+                    </div>
+                </div>
+
+                <div class="product-card reveal reveal-delay-1" data-cat="carnes">
+                    <span class="badge badge-fresh">Fresco</span>
+                    <div class="product-img-wrap">
+                        <img src="public/pata-muslo.jpg" alt="Pata y muslo"
+                             onerror="this.classList.add('errored')">
+                        <div class="product-emoji-fallback">🍗</div>
+                    </div>
+                    <div class="product-body">
+                        <h3 class="product-name">Pata y Muslo</h3>
+                        <p class="product-desc">Pollo fresco del día</p>
+                    </div>
+                </div>
+
+                <div class="product-card reveal reveal-delay-2" data-cat="carnes">
+                    <span class="badge badge-hot">Parrilla</span>
+                    <div class="product-img-wrap">
+                        <img src="public/chorizos.jpg" alt="Chorizos"
+                             onerror="this.classList.add('errored')">
+                        <div class="product-emoji-fallback">🌭</div>
+                    </div>
+                    <div class="product-body">
+                        <h3 class="product-name">Chorizos</h3>
+                        <p class="product-desc">Ideales para tu asado</p>
+                    </div>
+                </div>
+
+                <div class="product-card reveal reveal-delay-3" data-cat="almacen">
+                    <div class="product-img-wrap">
+                        <img src="public/fiambres.jpg" alt="Fiambres"
+                             onerror="this.classList.add('errored')">
+                        <div class="product-emoji-fallback">🧀</div>
+                    </div>
+                    <div class="product-body">
+                        <h3 class="product-name">Fiambres</h3>
+                        <p class="product-desc">Variedad de quesos y embutidos</p>
+                    </div>
+                </div>
+
+                <div class="product-card reveal" data-cat="frescos">
+                    <span class="badge badge-fresh">Fresco</span>
+                    <div class="product-img-wrap">
+                        <img src="public/lacteos.jpg" alt="Lácteos"
+                             onerror="this.classList.add('errored')">
+                        <div class="product-emoji-fallback">🥛</div>
+                    </div>
+                    <div class="product-body">
+                        <h3 class="product-name">Lácteos</h3>
+                        <p class="product-desc">Leche, yogures y más</p>
+                    </div>
+                </div>
+
+                <div class="product-card reveal reveal-delay-1" data-cat="frescos">
+                    <span class="badge badge-fresh">Fresco</span>
+                    <div class="product-img-wrap">
+                        <img src="public/verduras-frescas.jpg" alt="Verduras frescas"
+                             onerror="this.classList.add('errored')">
+                        <div class="product-emoji-fallback">🥬</div>
+                    </div>
+                    <div class="product-body">
+                        <h3 class="product-name">Verduras Frescas</h3>
+                        <p class="product-desc">Directo de la huerta</p>
+                    </div>
+                </div>
+
+                <div class="product-card reveal reveal-delay-2" data-cat="frescos">
+                    <span class="badge badge-fresh">Fresco</span>
+                    <div class="product-img-wrap">
+                        <img src="public/frutas-manzanas.jpg" alt="Manzanas"
+                             onerror="this.classList.add('errored')">
+                        <div class="product-emoji-fallback">🍎</div>
+                    </div>
+                    <div class="product-body">
+                        <h3 class="product-name">Manzanas</h3>
+                        <p class="product-desc">Frutas de primera calidad</p>
+                    </div>
+                </div>
+
+                <div class="product-card reveal reveal-delay-3" data-cat="frescos">
+                    <div class="product-img-wrap">
+                        <img src="public/citricos.naranjas.jpg" alt="Naranjas"
+                             onerror="this.classList.add('errored')">
+                        <div class="product-emoji-fallback">🍊</div>
+                    </div>
+                    <div class="product-body">
+                        <h3 class="product-name">Naranjas</h3>
+                        <p class="product-desc">Cítricos jugosos y dulces</p>
+                    </div>
+                </div>
+
+                <div class="product-card reveal" data-cat="almacen">
+                    <div class="product-img-wrap">
+                        <img src="public/galletas.jpg" alt="Galletas"
+                             onerror="this.classList.add('errored')">
+                        <div class="product-emoji-fallback">🍪</div>
+                    </div>
+                    <div class="product-body">
+                        <h3 class="product-name">Galletas</h3>
+                        <p class="product-desc">Dulces y saladas</p>
+                    </div>
+                </div>
+
+                <div class="product-card reveal reveal-delay-1" data-cat="almacen">
+                    <span class="badge badge-popular">Popular</span>
+                    <div class="product-img-wrap">
+                        <img src="public/snacks.jpg" alt="Snacks"
+                             onerror="this.classList.add('errored')">
+                        <div class="product-emoji-fallback">🍿</div>
+                    </div>
+                    <div class="product-body">
+                        <h3 class="product-name">Snacks</h3>
+                        <p class="product-desc">Para picar en cualquier momento</p>
+                    </div>
+                </div>
+
+                <div class="product-card reveal reveal-delay-2" data-cat="bebidas">
+                    <span class="badge badge-cold">Helado</span>
+                    <div class="product-img-wrap">
+                        <img src="public/gaseosas.jpg" alt="Gaseosas"
+                             onerror="this.classList.add('errored')">
+                        <div class="product-emoji-fallback">🥤</div>
+                    </div>
+                    <div class="product-body">
+                        <h3 class="product-name">Gaseosas Frías</h3>
+                        <p class="product-desc">Todas las marcas bien heladas</p>
+                    </div>
+                </div>
+
+                <div class="product-card reveal reveal-delay-3" data-cat="bebidas">
+                    <span class="badge badge-cold">Helado</span>
+                    <div class="product-img-wrap">
+                        <img src="public/cervezas.jpg" alt="Cervezas"
+                             onerror="this.classList.add('errored')">
+                        <div class="product-emoji-fallback">🍺</div>
+                    </div>
+                    <div class="product-body">
+                        <h3 class="product-name">Cervezas</h3>
+                        <p class="product-desc">Bien frías, siempre listas</p>
+                    </div>
+                </div>
+
+                <div class="product-card reveal" data-cat="bebidas">
+                    <span class="badge badge-popular">Popular</span>
+                    <div class="product-img-wrap">
+                        <img src="public/vinos.jpg" alt="Vinos"
+                             onerror="this.classList.add('errored')">
+                        <div class="product-emoji-fallback">🍷</div>
+                    </div>
+                    <div class="product-body">
+                        <h3 class="product-name">Vinos</h3>
+                        <p class="product-desc">Tintos, blancos y espumantes</p>
+                    </div>
+                </div>
+
+                <div class="product-card reveal reveal-delay-1" data-cat="bebidas">
+                    <div class="product-img-wrap">
+                        <img src="public/jugos.jpg" alt="Jugos"
+                             onerror="this.classList.add('errored')">
+                        <div class="product-emoji-fallback">🧃</div>
+                    </div>
+                    <div class="product-body">
+                        <h3 class="product-name">Jugos</h3>
+                        <p class="product-desc">Naturales y envasados</p>
+                    </div>
+                </div>
+
+                <div class="product-card reveal reveal-delay-2" data-cat="bebidas">
+                    <span class="badge badge-cold">Helado</span>
+                    <div class="product-img-wrap">
+                        <img src="public/helados.jpg" alt="Helados"
+                             onerror="this.classList.add('errored')">
+                        <div class="product-emoji-fallback">🍦</div>
+                    </div>
+                    <div class="product-body">
+                        <h3 class="product-name">Helados</h3>
+                        <p class="product-desc">Variedad de sabores</p>
+                    </div>
+                </div>
+
+                <div class="product-card reveal reveal-delay-3" data-cat="bebidas">
+                    <span class="badge badge-cold">Helado</span>
+                    <div class="product-img-wrap">
+                        <img src="public/hielo.jpg" alt="Hielo"
+                             onerror="this.classList.add('errored')">
+                        <div class="product-emoji-fallback">🧊</div>
+                    </div>
+                    <div class="product-body">
+                        <h3 class="product-name">Hielo</h3>
+                        <p class="product-desc">Bolsas de hielo para eventos</p>
+                    </div>
+                </div>
+
+                <div class="product-card reveal" data-cat="almacen">
+                    <div class="product-img-wrap">
+                        <img src="public/perfumeria.jpg" alt="Perfumería"
+                             onerror="this.classList.add('errored')">
+                        <div class="product-emoji-fallback">💄</div>
+                    </div>
+                    <div class="product-body">
+                        <h3 class="product-name">Perfumería</h3>
+                        <p class="product-desc">Artículos de higiene y belleza</p>
+                    </div>
+                </div>
+
+                <div class="product-card reveal reveal-delay-1" data-cat="almacen">
+                    <div class="product-img-wrap">
+                        <img src="public/productos-varios.jpg" alt="Productos varios"
+                             onerror="this.classList.add('errored')">
+                        <div class="product-emoji-fallback">🛒</div>
+                    </div>
+                    <div class="product-body">
+                        <h3 class="product-name">Productos Varios</h3>
+                        <p class="product-desc">Todo lo que necesitás</p>
+                    </div>
+                </div>
+
+                <div class="product-card reveal reveal-delay-2" data-cat="carnes">
+                    <span class="badge badge-hot">Parrilla</span>
+                    <div class="product-img-wrap">
+                        <img src="public/lena.jpg" alt="Leña"
+                             onerror="this.classList.add('errored')">
+                        <div class="product-emoji-fallback">🔥</div>
+                    </div>
+                    <div class="product-body">
+                        <h3 class="product-name">Leña</h3>
+                        <p class="product-desc">Para tu asado perfecto</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- GALLERY -->
+    <section class="gallery-section" id="galeria">
+        <div class="container">
+            <p class="section-label reveal">El local</p>
+            <h2 class="section-title reveal reveal-delay-1">Un espacio <em style="font-style:italic; color:var(--amber)">familiar</em></h2>
+            <p class="section-subtitle reveal reveal-delay-2">
+                Más de años sirviendo al barrio con dedicación y cariño.
+            </p>
+
+            <div class="gallery-grid">
+                <div class="gallery-item reveal">
+                    <img src="public/vinos.jpg" alt="Interior del local"
+                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+                    <div class="gallery-placeholder" style="display:none">
+                        <span>🏪</span><p>Interior del local</p>
+                    </div>
+                    <div class="gallery-overlay"><span>Nuestro espacio</span></div>
+                </div>
+                <div class="gallery-item reveal reveal-delay-1">
+                    <img src="public/cervezas.jpg" alt="Bebidas frías"
+                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+                    <div class="gallery-placeholder" style="display:none">
+                        <span>🍺</span><p>Bebidas frías</p>
+                    </div>
+                    <div class="gallery-overlay"><span>Bebidas bien heladas</span></div>
+                </div>
+                <div class="gallery-item reveal reveal-delay-2">
+                    <img src="public/fiambres.jpg" alt="Fiambres y quesos"
+                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+                    <div class="gallery-placeholder" style="display:none">
+                        <span>🧀</span><p>Fiambres y quesos</p>
+                    </div>
+                    <div class="gallery-overlay"><span>Fiambres del día</span></div>
+                </div>
+                <div class="gallery-item reveal reveal-delay-1">
+                    <img src="public/verduras-frescas.jpg" alt="Verduras frescas"
+                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+                    <div class="gallery-placeholder" style="display:none">
+                        <span>🥬</span><p>Verduras frescas</p>
+                    </div>
+                    <div class="gallery-overlay"><span>Verduras frescas</span></div>
+                </div>
+                <div class="gallery-item reveal reveal-delay-2">
+                    <img src="public/carnes-asado.jpg" alt="Carnes frescas"
+                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+                    <div class="gallery-placeholder" style="display:none">
+                        <span>🥩</span><p>Carnes frescas</p>
+                    </div>
+                    <div class="gallery-overlay"><span>Carnes frescas del día</span></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- MAP -->
+    <section class="map-section" id="ubicacion">
+        <div class="container">
+            <p class="section-label reveal">¿Cómo llegar?</p>
+            <h2 class="section-title reveal reveal-delay-1">Encontranos en<br>Tirasso 2765</h2>
+            <p class="section-subtitle reveal reveal-delay-2">Fácil acceso, siempre abierto para recibirte.</p>
+
+            <div class="map-layout">
+                <div class="map-frame reveal">
+                    <iframe
                         src="https://www.google.com/maps?q=Tirasso+2765&output=embed"
-                        width="100%" 
-                        height="450" 
-                        style="border:0; border-radius: 20px;" 
-                        allowfullscreen="" 
-                        loading="lazy" 
+                        width="100%" height="420"
+                        style="border:0;" allowfullscreen="" loading="lazy"
                         referrerpolicy="no-referrer-when-downgrade">
                     </iframe>
                 </div>
-                
-                <div class="map-info">
-                    <div class="map-info-card">
-                        <span class="map-icon">📍</span>
+                <div class="map-sidebar reveal reveal-delay-1">
+                    <div class="info-tile">
+                        <div class="info-tile-icon">📍</div>
                         <div>
-                            <h3>Dirección</h3>
+                            <h4>Dirección</h4>
                             <p>Tirasso 2765</p>
                         </div>
                     </div>
-                    
-                    <div class="map-info-card">
-                        <span class="map-icon">🕐</span>
+                    <div class="info-tile">
+                        <div class="info-tile-icon">🕐</div>
                         <div>
-                            <h3>Horarios</h3>
-                            <p>Todos los días<br>8:00 AM - 12:00 AM</p>
+                            <h4>Horarios</h4>
+                            <p>Todos los días<br>8:00 AM – 12:00 AM</p>
                         </div>
                     </div>
-                    
-                    <a href="https://maps.app.goo.gl/XG7GLpNgAJB6CS3F8" target="_blank" class="map-button">
+                    <div class="info-tile">
+                        <div class="info-tile-icon">✦</div>
+                        <div>
+                            <h4>Estado</h4>
+                            <p>Abierto ahora</p>
+                        </div>
+                    </div>
+                    <a href="https://maps.app.goo.gl/XG7GLpNgAJB6CS3F8"
+                       target="_blank" class="map-btn">
                         🗺️ Abrir en Google Maps
                     </a>
                 </div>
@@ -306,26 +993,71 @@
         </div>
     </section>
 
-    <!-- SECCIÓN LLAMADA A LA ACCIÓN (CTA) -->
+    <!-- CTA -->
     <section class="cta-section">
-        <div class="cta-content">
-            <h2 class="cta-title">Pasá hoy por Bebidas al Paso</h2>
-            <p class="cta-subtitle">Abierto ahora – te esperamos</p>
-            <div class="cta-details">
-                <p class="cta-address">📍 Tirasso 2765</p>
-                <p class="cta-hours">🕐 Todos los días de 8:00 AM a 12:00 de la noche</p>
+        <div class="cta-inner">
+            <div class="cta-ornament">✦</div>
+            <h2 class="cta-title reveal">
+                Pasá hoy por<br><em>Bebidas al Paso</em>
+            </h2>
+            <p class="cta-sub reveal reveal-delay-1">
+                Te esperamos con todo lo que buscás, al alcance de tu mano y con la calidez de siempre.
+            </p>
+            <div class="cta-pills reveal reveal-delay-2">
+                <div class="cta-pill">📍 Tirasso 2765</div>
+                <div class="cta-pill">🕐 8:00 AM – 12:00 AM</div>
+                <div class="cta-pill">📅 Todos los días</div>
             </div>
         </div>
     </section>
 
     <!-- FOOTER -->
-    <footer class="footer">
-        <div class="footer-content">
-            <h3 class="footer-title">Bebidas al Paso</h3>
-            <p class="footer-text">📍 Tirasso 2765</p>
-            <p class="footer-text">🕐 Todos los días de 8:00 AM a 12:00 de la noche</p>
-            <p class="footer-copy">© 2026 Bebidas al Paso - Todos los derechos reservados</p>
+    <footer>
+        <div class="footer-inner">
+            <div class="footer-logo">Bebidas <span>al Paso</span></div>
+            <div class="footer-details">
+                <strong>Minimarket familiar</strong>
+                <span>📍 Tirasso 2765</span>
+                <span>🕐 8:00 AM – 12:00 AM · Todos los días</span>
+            </div>
         </div>
+        <p class="footer-copy">© 2026 Bebidas al Paso — Todos los derechos reservados</p>
     </footer>
+
+    <script>
+        // Nav scroll effect
+        const nav = document.getElementById('nav');
+        window.addEventListener('scroll', () => {
+            nav.classList.toggle('scrolled', window.scrollY > 40);
+        });
+
+        // Scroll reveal
+        const reveals = document.querySelectorAll('.reveal');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(e => {
+                if (e.isIntersecting) {
+                    e.target.classList.add('visible');
+                    observer.unobserve(e.target);
+                }
+            });
+        }, { threshold: 0.1 });
+        reveals.forEach(el => observer.observe(el));
+
+        // Product filter
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const cards = document.querySelectorAll('#productsGrid .product-card');
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                const filter = btn.dataset.filter;
+                cards.forEach(card => {
+                    const match = filter === 'all' || card.dataset.cat === filter;
+                    card.style.display = match ? '' : 'none';
+                });
+            });
+        });
+    </script>
 </body>
 </html>
